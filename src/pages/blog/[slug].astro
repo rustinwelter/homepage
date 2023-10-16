@@ -1,0 +1,87 @@
+---
+import Layout, { author, locale, posts } from "../../layouts/Layout.astro";
+
+// 1. Static Site Generation (SSG)
+// import type { CollectionEntry } from "astro:content";
+// interface Props {
+//   post: CollectionEntry<"blog">;
+// }
+// export async function getStaticPaths() {
+//   return posts.map((post) => {
+//     return {
+//       params: { slug: post.slug },
+//       props: { post },
+//     };
+//   });
+// }
+// const { post } = Astro.props;
+
+// 2. Server Side Rendering (SSR)
+import { getEntry } from "astro:content";
+const { slug } = Astro.params;
+if (slug === undefined) {
+  throw new Error("Slug is required");
+}
+const post = await getEntry("blog", slug);
+if (post === undefined) {
+  return Astro.redirect("/404");
+}
+
+const { Content } = await post.render();
+---
+
+<Layout
+  title={`${post.data.title} - ${author}`}
+  ,
+  description={post.data.description}
+>
+  <div
+    class="bg-white bg-opacity-80 dark:bg-slate-900 dark:bg-opacity-90 pt-20 pb-32 px-10 space-y-20"
+  >
+    <article class="prose prose-lg max-w-none dark:prose-invert">
+      <h1 class="md:text-center">{post.data.title}</h1>
+      <div class="md:flex md:space-x-10">
+        <p>
+          <span>Posted:&nbsp;</span>
+          <time datetime={post.data.postDate.toDateString()}>
+            {
+              post.data.postDate.toLocaleDateString(locale, {
+                dateStyle: "full",
+              })
+            }</time
+          >
+        </p>
+        {
+          post.data.lastUpdateDate !== undefined && (
+            <p>
+              <span>Last Updated:&nbsp;</span>
+              <time datetime={post.data.lastUpdateDate.toDateString()}>
+                {post.data.lastUpdateDate.toLocaleDateString(locale, {
+                  dateStyle: "full",
+                })}
+              </time>
+            </p>
+          )
+        }
+      </div>
+      <Content />
+    </article>
+    <script
+      src="https://giscus.app/client.js"
+      data-repo="rustinwelter/homepage"
+      data-repo-id="R_kgDOKg-USA"
+      data-category="Announcements"
+      data-category-id="DIC_kwDOKg-USM4CaK0W"
+      data-mapping="title"
+      data-strict="1"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async
+    ></script>
+  </div>
+</Layout>

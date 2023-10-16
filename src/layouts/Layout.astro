@@ -1,0 +1,47 @@
+---
+import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
+
+import "@fontsource-variable/inter";
+import "@fontsource-variable/frank-ruhl-libre";
+
+import { ViewTransitions } from "astro:transitions";
+import Background from "../components/Background.astro";
+
+import { getCollection } from "astro:content";
+import { sortByDate } from "../utils/utils";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+export const author = "Rustin Welter";
+export const locale = "en-US";
+export const posts = await getCollection("blog");
+export const sortedPosts = posts.sort(sortByDate);
+---
+
+<html lang={locale} class="scroll-smooth dark:bg-slate-900 dark:text-slate-200">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content={author} />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/png" href="/assets/favicon.png" />
+    <meta name="robots" content="noarchive, nofollow, nosnippet" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <ViewTransitions />
+  </head>
+  <body>
+    <Navbar />
+    <Background />
+    <main class="max-w-screen-lg lg:mx-auto md:mt-28 backdrop-blur-lg">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

@@ -1,0 +1,68 @@
+---
+import Layout, { author, locale, sortedPosts } from "../layouts/Layout.astro";
+
+const recentPosts = sortedPosts.slice(0, 3);
+---
+
+<Layout
+  title={`Home - ${author}`}
+  ,
+  description={`Welcome to ${author}'s home page!`}
+>
+  <div class="space-y-4">
+    <section class="py-16">
+      <img
+        src="/assets/pfp.webp"
+        alt="profile picture"
+        loading="lazy"
+        decoding="async"
+        class="rounded-full mx-auto p-3 w-80"
+      />
+      <h1 class="text-center text-7xl font-black p-4 font-serif">
+        {author}
+      </h1>
+    </section>
+    <section
+      class="py-20 bg-white bg-opacity-30 dark:bg-slate-900 dark:bg-opacity-90"
+    >
+      <h2 class="text-center text-6xl font-semibold pb-10 font-serif">
+        Recent Posts
+      </h2>
+      <ul>
+        {
+          recentPosts.map((post) => (
+            <li>
+              <a href={`/blog/${post.slug}`} title={post.data.title}>
+                <article class="p-6 hover:bg-pink-500 hover:bg-opacity-60  dark:hover:bg-pink-900 dark:hover:bg-opacity-80 duration-200">
+                  <h3 class="text-4xl font-semibold">{post.data.title}</h3>
+                  <div class="flex items-baseline space-x-5 my-3">
+                    {post.data.lastUpdateDate !== undefined && (
+                      <time datetime={post.data.lastUpdateDate.toDateString()}>
+                        {post.data.lastUpdateDate.toLocaleDateString(locale, {
+                          dateStyle: "full",
+                        })}
+                      </time>
+                    )}
+                    {post.data.lastUpdateDate === undefined && (
+                      <time datetime={post.data.postDate.toDateString()}>
+                        {post.data.postDate.toLocaleDateString(locale, {
+                          dateStyle: "full",
+                        })}
+                      </time>
+                    )}
+                    {post.data.readTime !== undefined && (
+                      <small class="text-base">
+                        <time>{post.data.readTime}</time> min read
+                      </small>
+                    )}
+                  </div>
+                  <p class="text-xl">{post.data.description}</p>
+                </article>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+</Layout>

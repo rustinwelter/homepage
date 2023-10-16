@@ -1,0 +1,44 @@
+---
+import Layout, { author, locale } from "../../layouts/Layout.astro";
+
+import { sortedPosts } from "../../layouts/Layout.astro";
+---
+
+<Layout title={`Blog - ${author}`} , description={`${author}'s blog posts.`}>
+  <h1 class="text-6xl font-bold font-serif p-5">Posts</h1>
+  <ul>
+    {
+      sortedPosts.map((post) => (
+        <li>
+          <a href={`/blog/${post.slug}`} title={post.data.title}>
+            <article class="p-6 bg-white bg-opacity-40 hover:bg-pink-400 hover:bg-opacity-80 dark:bg-slate-900 dark:bg-opacity-80 dark:hover:bg-pink-900 dark:hover:bg-opacity-90 duration-200">
+              <h2 class="text-4xl font-semibold">{post.data.title}</h2>
+              <div class="flex items-baseline space-x-5 my-3">
+                {post.data.lastUpdateDate !== undefined && (
+                  <time datetime={post.data.lastUpdateDate.toDateString()}>
+                    {post.data.lastUpdateDate.toLocaleDateString(locale, {
+                      dateStyle: "full",
+                    })}
+                  </time>
+                )}
+                {post.data.lastUpdateDate === undefined && (
+                  <time datetime={post.data.postDate.toDateString()}>
+                    {post.data.postDate.toLocaleDateString(locale, {
+                      dateStyle: "full",
+                    })}
+                  </time>
+                )}
+                {post.data.readTime !== undefined && (
+                  <small class="text-base">
+                    <time>{post.data.readTime}</time> min read
+                  </small>
+                )}
+              </div>
+              <p class="text-xl">{post.data.description}</p>
+            </article>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

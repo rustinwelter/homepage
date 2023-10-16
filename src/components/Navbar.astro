@@ -1,0 +1,72 @@
+---
+type anchor = {
+  href: string;
+  target: string;
+  rel: string;
+};
+
+type NavLink = {
+  title: string;
+  a: anchor;
+  icon: string;
+  iconDark: string;
+};
+
+const navLinks: NavLink[] = [
+  {
+    title: "Home",
+    a: { href: "/", target: "_self", rel: "me" },
+    icon: "/assets/home.webp",
+    iconDark: "/assets/home-white.webp",
+  },
+  {
+    title: "Blog",
+    a: { href: "/blog", target: "_self", rel: "" },
+    icon: "/assets/blog.webp",
+    iconDark: "/assets/blog-white.webp",
+  },
+  {
+    title: "GitHub",
+    a: {
+      href: "https://github.com/rustinwelter",
+      target: "_blank",
+      rel: "noopener noreferrer external",
+    },
+    icon: "/assets/github.png",
+    iconDark: "assets/github-white.png",
+  },
+];
+---
+
+<nav class="w-full fixed max-md:bottom-0 md:top-0 z-20 backdrop-blur-3xl">
+  <ul class="flex items-center justify-around max-w-screen-xl mx-auto py-3">
+    {
+      navLinks.map((link) => (
+        <li
+          title={link.title}
+          class="after:h-1 after:w-0 after:block after:bg-pink-600 hover:after:w-full after:duration-150 ease-in"
+        >
+          <a href={link.a.href} target={link.a.target} rel={link.a.rel}>
+            <img
+              src={link.icon}
+              alt={link.title}
+              loading="lazy"
+              decoding="async"
+              class="md:hidden w-9 dark:hidden"
+            />
+            <img
+              src={link.iconDark}
+              alt={link.title}
+              loading="lazy"
+              decoding="async"
+              class="hidden md:hidden w-9 dark:block"
+            />
+            <p class="max-md:hidden px-3 font-extrabold text-2xl font-serif">
+              {link.title}
+            </p>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
